@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d1217" />
+  <title>A Little Message For You 🤍</title>
+  <style>
+    :root{
+      --bg:#120d11;
+      --bg2:#21141b;
+      --paper:#fffaf5;
+      --ink:#2d2026;
+      --muted:#7c6670;
+      --rose:#e9a4b7;
+      --rose2:#f3c9d4;
+      --wine:#7a324a;
+      --cream:#f8eee9;
+      --gold:#d9b57b;
+      --shadow:0 24px 70px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--paper);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(233,164,183,.16), transparent 34%),
+        radial-gradient(circle at 86% 28%, rgba(217,181,123,.10), transparent 28%),
+        linear-gradient(165deg,var(--bg),var(--bg2) 52%,#130d12 100%);
+      font-family:Arial, Helvetica, sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.24;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom,black,transparent 75%);
+    }
+
+    .opening{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(233,164,183,.22), transparent 38%),
+        linear-gradient(160deg,#160e13,#27161f 58%,#120c10);
+      transition:opacity .9s ease, visibility .9s ease;
+    }
+    .opening.hidden{opacity:0;visibility:hidden}
+
+    .envelope{
+      width:min(470px,92vw);
+      text-align:center;
+      animation:float 4s ease-in-out infinite;
+    }
+    @keyframes float{50%{transform:translateY(-8px)}}
+
+    .seal{
+      width:70px;height:70px;border-radius:50%;
+      margin:0 auto 18px;
+      display:grid;place-items:center;
+      background:linear-gradient(145deg,#b35d78,#7d3048);
+      box-shadow:0 14px 38px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.18);
+      font-size:30px;
+    }
+    .opening h1{
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:clamp(32px,7vw,54px);
+      line-height:1.05;
+      font-weight:500;
+      margin:0 0 12px;
+    }
+    .opening p{
+      color:#eadce2;
+      line-height:1.7;
+      margin:0 auto 25px;
+      max-width:390px;
+      font-size:15px;
+    }
+    .open-btn{
+      border:0;
+      color:#2d2026;
+      background:linear-gradient(135deg,#fff9f6,#f4dce3);
+      padding:14px 24px;
+      border-radius:999px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:15px;
+      box-shadow:0 12px 34px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .open-btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.32)}
+
+    .music-pill{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:900;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 12px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background:rgba(24,14,20,.72);
+      backdrop-filter:blur(12px);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(12px);
+      transition:.5s ease;
+    }
+    .music-pill.show{opacity:1;pointer-events:auto;transform:none}
+    .music-pill button{
+      width:34px;height:34px;border:0;border-radius:50%;cursor:pointer;
+      color:#2b1c22;background:#f7e8ed;font-size:16px;
+    }
+    .music-status{font-size:12px;color:#ead8df;min-width:95px}
+    .bars{display:flex;align-items:flex-end;gap:2px;height:14px}
+    .bars span{width:2px;background:#efc0ce;border-radius:10px;animation:bar .8s ease-in-out infinite alternate}
+    .bars span:nth-child(2){animation-delay:.15s}.bars span:nth-child(3){animation-delay:.3s}.bars span:nth-child(4){animation-delay:.45s}
+    @keyframes bar{from{height:3px}to{height:13px}}
+    .muted .bars span{animation:none;height:3px;opacity:.45}
+
+    main{opacity:0;transition:opacity 1.2s ease}
+    main.show{opacity:1}
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:90px 20px 70px;
+      position:relative;
+    }
+    .hero-inner{width:min(880px,100%);text-align:center}
+    .eyebrow{
+      letter-spacing:.18em;text-transform:uppercase;font-size:11px;color:#d9b9c4;margin-bottom:18px;
+    }
+    .hero h2{
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:clamp(36px,8vw,78px);
+      font-weight:500;
+      margin:0;
+      line-height:1.02;
+    }
+    .hero .sub{
+      max-width:620px;
+      margin:22px auto 0;
+      color:#dbc9d0;
+      font-size:clamp(15px,2.2vw,18px);
+      line-height:1.8;
+    }
+    .scroll-hint{margin-top:44px;font-size:12px;color:#a98d98;animation:pulse 2s infinite}
+    @keyframes pulse{50%{opacity:.38}}
+
+    .letter-wrap{
+      width:min(920px,calc(100% - 28px));
+      margin:0 auto;
+      padding-bottom:110px;
+    }
+
+    .chapter{
+      position:relative;
+      margin:0 auto 28px;
+      padding:clamp(28px,6vw,55px);
+      border-radius:30px;
+      background:linear-gradient(145deg,rgba(255,250,245,.98),rgba(249,237,238,.97));
+      color:var(--ink);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.75);
+      opacity:0;
+      transform:translateY(28px);
+      transition:opacity .8s ease, transform .8s ease;
+    }
+    .chapter.visible{opacity:1;transform:none}
+    .chapter::after{
+      content:"";
+      position:absolute;
+      width:140px;height:140px;border-radius:50%;
+      right:-70px;top:-70px;
+      background:rgba(233,164,183,.17);
+    }
+
+    .chapter p{
+      position:relative;z-index:1;
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:clamp(17px,2.8vw,21px);
+      line-height:1.78;
+      margin:0 0 1em;
+    }
+    .chapter p:last-child{margin-bottom:0}
+    .small{font-family:Arial,Helvetica,sans-serif!important;font-size:13px!important;color:var(--muted);letter-spacing:.02em}
+    .bigline{
+      display:block;
+      margin:18px 0;
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:clamp(30px,7vw,54px);
+      line-height:1.1;
+      color:var(--wine);
+      text-align:center;
+    }
+    .softline{
+      display:block;
+      margin:14px 0;
+      color:var(--wine);
+      font-size:1.08em;
+      font-weight:700;
+    }
+
+    .memory{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+      gap:28px;
+      align-items:center;
+    }
+    .polaroid{
+      background:#fff;
+      padding:10px 10px 38px;
+      border-radius:4px;
+      box-shadow:0 18px 45px rgba(56,33,42,.22);
+      transform:rotate(-1.8deg);
+      position:relative;
+    }
+    .memory:nth-child(even) .polaroid{transform:rotate(1.6deg)}
+    .polaroid img{width:100%;display:block;aspect-ratio:3/4;object-fit:cover;border-radius:2px}
+    .polaroid::after{
+      content:"♡";
+      position:absolute;
+      right:17px;bottom:8px;
+      color:#c4778d;font-size:21px;
+    }
+    .memory-copy p:first-child{font-size:clamp(20px,3vw,26px);color:var(--wine);font-weight:700}
+
+    .quote-card{
+      background:linear-gradient(145deg,#6f3045,#9b4d68);
+      color:#fff7f9;
+      text-align:center;
+      border-radius:30px;
+      padding:clamp(38px,7vw,68px) clamp(22px,6vw,60px);
+      box-shadow:var(--shadow);
+      margin:0 auto 28px;
+      position:relative;
+      overflow:hidden;
+      opacity:0;transform:translateY(28px);transition:.8s ease;
+    }
+    .quote-card.visible{opacity:1;transform:none}
+    .quote-card::before,
+    .quote-card::after{
+      content:"";position:absolute;border:1px solid rgba(255,255,255,.18);border-radius:50%;
+    }
+    .quote-card::before{width:250px;height:250px;left:-125px;top:-125px}
+    .quote-card::after{width:190px;height:190px;right:-95px;bottom:-95px}
+    .quote-card .tiny{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:#efd4dc}
+    .quote-card blockquote{
+      margin:15px auto 0;
+      max-width:680px;
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:clamp(32px,7vw,58px);
+      line-height:1.1;
+      font-style:italic;
+    }
+
+    .clarity{
+      border:1px solid rgba(122,50,74,.16);
+      background:linear-gradient(145deg,#fffaf7,#fff3f4);
+    }
+    .tell-me{
+      display:grid;
+      gap:10px;
+      margin:20px 0 6px;
+    }
+    .tell-me span{
+      display:block;
+      padding:13px 16px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid #ead7de;
+      font-family:Arial,Helvetica,sans-serif;
+      color:#6d4b58;
+      font-size:14px;
+    }
+
+    .finale{
+      min-height:82vh;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:90px 22px 130px;
+    }
+    .finale-inner{max-width:760px}
+    .finale h3{
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:clamp(34px,7vw,66px);
+      font-weight:500;
+      margin:0 0 22px;
+    }
+    .finale p{color:#dfccd3;line-height:1.85;font-size:clamp(16px,2.4vw,19px)}
+    .heart-end{font-size:42px;margin-top:25px;animation:heartbeat 1.7s ease-in-out infinite}
+    @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.14)}28%{transform:scale(1)}}
+
+    .floating-heart{
+      position:fixed;
+      bottom:-30px;
+      z-index:0;
+      pointer-events:none;
+      color:rgba(239,189,204,.22);
+      animation:rise linear forwards;
+    }
+    @keyframes rise{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+
+    @media(max-width:720px){
+      .memory{grid-template-columns:1fr;gap:22px}
+      .polaroid{max-width:430px;margin:0 auto}
+      .chapter{border-radius:22px}
+      .music-status{display:none}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <audio id="piano" preload="auto" loop src="assets/palagi-piano.mp3"></audio>
+  <audio id="vocals" preload="auto" src="assets/palagi-vocals.mp3"></audio>
+
+  <div class="opening" id="opening">
+    <div class="envelope">
+      <div class="seal">🤍</div>
+      <h1>I have something<br/>for you.</h1>
+      <p>Nothing scary, promise HAHAHA. Just a little message I’ve been carrying in my head lately.</p>
+      <button class="open-btn" id="openBtn">Open my message</button>
+    </div>
+  </div>
+
+  <div class="music-pill" id="musicPill">
+    <div class="bars"><span></span><span></span><span></span><span></span></div>
+    <div class="music-status" id="musicStatus">piano, softly ♡</div>
+    <button id="muteBtn" aria-label="Mute music">♫</button>
+  </div>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">just me being a little too honest</div>
+        <h2>Hiii, kinaon kana??<br/>HAHAHAHA 😭</h2>
+        <p class="sub">Btw, I have this message for you… don’t worry, hindi naman sermon HAHAHA. I just think some things are better said than left running around in my head.</p>
+        <div class="scroll-hint">scroll slowly ↓</div>
+      </div>
+    </section>
+
+    <div class="letter-wrap">
+      <section class="chapter cue-piano">
+        <p>I don’t really know how to start this without making it sound too serious agad, pero I’ve been thinking a lot lately.</p>
+        <p>Alam ko things haven’t really felt okay between us these past moments. Maybe it’s only been a day, maybe we’re just both dealing with things differently, pero somehow even a little silence feels longer when it’s someone you genuinely care about.</p>
+        <p>And before anything else, I want you to know something.</p>
+        <span class="bigline">I’m still here.</span>
+        <p>Hindi porket things suddenly feel a little different, I’m already giving up or slowly walking away.</p>
+      </section>
+
+      <section class="chapter cue-piano">
+        <p>Siguro what’s bothering me lately is that I’ve been thinking about that phase people talk about—when the infatuation starts to calm down.</p>
+        <p>Yung hindi na puro kilig, excitement, and wanting to talk every second. Then suddenly may doubts, may fears, may misunderstandings, at may mga bagay kang biglang kine-question kahit dati hindi mo naman iniisip.</p>
+        <p>Minsan napapaisip lang ako kung pareho pa ba tayo ng nararamdaman lately, or maybe we’re just processing things differently. I don’t want to assume anything about you, kaya siguro mas lalo lang akong napapa-overthink.</p>
+        <p>Overthinker din pala ako, surprise HAHAHAHA 😭</p>
+        <p>Pero I guess natatakot lang talaga ako because somewhere along the way…</p>
+        <span class="softline">I started caring about you more than I expected.</span>
+      </section>
+
+      <section class="chapter memory cue-piano">
+        <div class="polaroid"><img src="assets/memory1.jpg" alt="A happy memory together" /></div>
+        <div class="memory-copy">
+          <p>Look ohhh 😭 ganito tayo dati HAHAHA, simpleng moments lang pero ang saya na agad.</p>
+          <p>But whenever my mind gets too loud… I remember <strong>us</strong>.</p>
+          <p>I remember those times na sobrang late na natin sa church pero nandun pa rin tayo, talking about the most random, nonsense things HAHAHAHA.</p>
+          <p>We could literally talk about nothing… and somehow it still felt like something.</p>
+        </div>
+      </section>
+
+      <section class="chapter memory cue-piano">
+        <div class="memory-copy">
+          <p>Tapos ito 😭 HAHAHA. Just us being us. Ewan ko, simple lang pero ang saya balikan.</p>
+          <p>I remember the days we were together. Yung mga simpleng moments na hindi naman natin sinadya maging special… pero naging memories anyway.</p>
+          <p>And PLEASE 😭 I still remember the first time I kissed your cheek. HAHAHAHAHA.</p>
+          <p>I was probably trying to act normal afterwards… pero inside? <strong>Grabe, buong araw yata akong masaya dahil doon.</strong> 😭 Corny, I know.</p>
+        </div>
+        <div class="polaroid"><img src="assets/memory2.jpg" alt="Another memory together" /></div>
+      </section>
+
+      <section class="chapter cue-piano">
+        <p>Pero hindi lang naman yung mga kalokohan natin yung naaalala ko. I remember the conversations where we actually talked about life.</p>
+        <p>Yung saan ka pupunta for college. What happens after senior high. Kung saan tayo dadalhin ng buhay kapag everything starts changing.</p>
+        <p>We didn’t know what was going to happen. Honestly, hanggang ngayon hindi naman natin alam. But there was something comforting about talking about the future with you.</p>
+        <p>And then I remember when you told me that you weren’t ready for a relationship yet.</p>
+        <p><strong>Honestly? Neither am I.</strong></p>
+      </section>
+
+      <section class="quote-card cue-vocal-one" data-cue="vocal1">
+        <div class="tiny">one question I never forgot</div>
+        <blockquote>“Can you wait?”</blockquote>
+      </section>
+
+      <section class="chapter cue-vocal-one" data-cue="vocal1">
+        <p>Alam mo… baka simpleng tanong lang yun. But it stayed with me.</p>
+        <span class="bigline">“I can wait.”</span>
+        <p>And when I told you that, I meant it.</p>
+        <p>Parang minarkahan ko talaga somewhere in my heart yung words na yun.</p>
+        <p>Not because I’m expecting na may utang kang relationship sa akin someday. Not because naghihintay ako para mapilitan kang maging ready. And definitely not because I want us to rush into something that neither of us is ready for.</p>
+        <p>When I said <strong>I can wait</strong>, I meant…</p>
+        <span class="softline">I’m willing to give you time. And I’m willing to give us time.</span>
+      </section>
+
+      <section class="chapter cue-piano">
+        <p>Hindi naman kailangan madaliin lahat. We’re still figuring ourselves out—our studies, college, our future, everything.</p>
+        <p>And I remember your worries too. Yung times na grabe ka mag-overthink about academics. Kapag feeling mo hindi enough yung ginagawa mo. Kapag natatakot ka na baka hindi mo kayanin.</p>
+        <p>Even yung tungkol sa circle of people around me… those times na parang feeling mo napepressure ka somehow or you feel like you have to prove something.</p>
+        <span class="bigline">Okay lang.<br/>Wala kang dapat katakutan.</span>
+        <p>You don’t have to compete with anyone around me. You don’t have to prove yourself to my friends, to other people, or even to me.</p>
+        <p>Hindi mo kailangan maging pinakamagaling. Hindi mo kailangan laging pinakamataas ang grades. Hindi mo kailangang baguhin yung sarili mo just so you can feel like you deserve to be beside me.</p>
+      </section>
+
+      <section class="chapter memory cue-piano">
+        <div class="polaroid"><img src="assets/memory3.jpg" alt="A simple day together" /></div>
+        <div class="memory-copy">
+          <p>And this one 😭 HAHAHA. Mga simpleng araw lang talaga, pero somehow sila yung pinaka-naaalala ko ngayon.</p>
+          <p><strong>I like you because you’re you.</strong></p>
+          <p>The girl who overthinks sometimes. The girl I can spend hours talking nonsense with. The girl whose problems I’d still listen to kahit paulit-ulit pa yan.</p>
+          <p>And of course—<strong>the girl na minsan kinakatakutan ko kapag nagagalit sa room HAHAHAHAHA 😭</strong></p>
+          <p>Like seriously, minsan nakakatakot ka 😭 pero somehow bakit ang cute mo pa rin kahit galit ka?? HAHAHAHA.</p>
+        </div>
+      </section>
+
+      <section class="chapter clarity cue-piano">
+        <p>Maybe that’s why medyo nakakatakot kapag things suddenly feel different.</p>
+        <p>Because after the talks, the memories, the reassurance, the random moments… I don’t want us to slowly become distant just because we reached a point where everything isn’t as effortless as it was in the beginning.</p>
+        <p>But at the same time, ayoko rin na yung memories natin ang maging reason para maramdaman mong kailangan mong manatili. I never want you to feel trapped by everything we’ve already shared.</p>
+        <span class="bigline">That’s why I’m asking for clarity.</span>
+        <p>Not because I want you to tell me exactly what I want to hear. Hindi ko kailangan ng reassurance just because you know I’m scared.</p>
+        <p>I’d rather know what’s genuinely inside your heart.</p>
+        <div class="tell-me">
+          <span>If something has been bothering you… tell me.</span>
+          <span>If you’re confused… tell me.</span>
+          <span>If may nagawa akong nakasakit sa’yo… tell me.</span>
+          <span>If there’s something you’ve been keeping to yourself… tell me.</span>
+        </div>
+        <p>And if you still want to continue this beautiful, confusing thing between us… I’d love to know that too.</p>
+        <span class="softline">Whatever it is… mas gusto kitang maintindihan kaysa hulaan ka.</span>
+      </section>
+
+      <section class="chapter cue-piano">
+        <p>Because despite everything going through my head lately… despite the doubts… despite me overthinking things at the most random times HAHAHA…</p>
+        <span class="bigline">I’m still here.</span>
+        <p>I still want those late conversations. I still want your random stories. I still want to hear you complain about school HAHAHAHA.</p>
+        <p>I still want to be the person reminding you na <strong>kaya mo yan</strong> whenever you start doubting yourself again.</p>
+        <p>And I still want more days with you that we don’t even realize are becoming memories.</p>
+        <p>When I said <strong>I can wait</strong>, I never meant that I would wait while expecting something from you.</p>
+        <p>I meant that I’m willing to wait while <strong>we grow</strong>. While we figure things out. While we understand ourselves. While we understand each other. Without forcing something we’re not ready for yet.</p>
+      </section>
+
+      <section class="quote-card cue-vocal-two" data-cue="vocal2">
+        <div class="tiny">the simplest truth in all of this</div>
+        <blockquote>Nandito pa rin ako.</blockquote>
+      </section>
+
+      <section class="chapter cue-vocal-two" data-cue="vocal2">
+        <p>Natatakot ako. Yes. I think that’s probably the most honest thing I can tell you right now.</p>
+        <p>Pero being scared doesn’t mean I’m leaving.</p>
+        <p>Still the same person who could stay with you until late just talking about absolutely nothing.</p>
+        <p>Still the same idiot who smiled the whole day after kissing your cheek. 😭</p>
+        <p>Still the same person who’ll tell you—<strong>wala kang dapat katakutan.</strong></p>
+        <p>And still the same person who meant every word when he told you…</p>
+        <span class="bigline">“I can wait.”</span>
+      </section>
+
+      <section class="chapter cue-piano">
+        <p>I’m not asking you to have everything figured out right now.</p>
+        <p>You don’t have to. Hindi rin naman ako sure sa lahat.</p>
+        <p>I just hope na we can continue being honest with each other. Take things slowly. Understand each other a little better.</p>
+        <p>And see where this beautiful… confusing… sometimes nakakabaliw HAHAHA… thing between us takes us.</p>
+      </section>
+    </div>
+
+    <section class="finale cue-piano">
+      <div class="finale-inner">
+        <h3>Basta… please remember this.</h3>
+        <p>Kahit medyo magulo utak ko lately HAHAHA, hindi nagbago yung fact na I still care about you.</p>
+        <h3 style="margin-top:26px">A lot. 🤍</h3>
+        <div class="heart-end">♡</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const opening = document.getElementById('opening');
+    const openBtn = document.getElementById('openBtn');
+    const main = document.getElementById('main');
+    const piano = document.getElementById('piano');
+    const vocals = document.getElementById('vocals');
+    const musicPill = document.getElementById('musicPill');
+    const muteBtn = document.getElementById('muteBtn');
+    const musicStatus = document.getElementById('musicStatus');
+    let muted = false;
+    let currentMode = 'piano';
+    let fadeToken = 0;
+    const triggered = new Set();
+
+    piano.volume = 0;
+    vocals.volume = 0;
+
+    function fadeTo(audio, target, ms=1300){
+      const token = ++fadeToken;
+      const start = audio.volume;
+      const delta = target - start;
+      const steps = Math.max(1, Math.round(ms/50));
+      let i = 0;
+      const id = setInterval(()=>{
+        if(token !== fadeToken && audio === vocals){ clearInterval(id); return; }
+        i++;
+        audio.volume = Math.max(0, Math.min(1, start + delta*(i/steps)));
+        if(i>=steps) clearInterval(id);
+      },50);
+    }
+
+    function smoothVolume(audio, target, ms=1200){
+      const start = audio.volume;
+      const delta = target-start;
+      const steps=Math.max(1,Math.round(ms/50));
+      let i=0;
+      const id=setInterval(()=>{
+        i++;
+        audio.volume=Math.max(0,Math.min(1,start+delta*(i/steps)));
+        if(i>=steps) clearInterval(id);
+      },50);
+    }
+
+    async function startPiano(){
+      try{
+        await piano.play();
+        smoothVolume(piano, muted?0:.24, 1600);
+      }catch(e){}
+    }
+
+    function setStatus(text){ musicStatus.textContent = text; }
+
+    async function enterVocalCue(which){
+      if(muted) return;
+      currentMode = which;
+      const startAt = which === 'vocal1' ? 86 : 226;
+      if(!triggered.has(which)){
+        vocals.currentTime = startAt;
+        triggered.add(which);
+      }
+      try{ await vocals.play(); }catch(e){}
+      smoothVolume(piano,.075,1300);
+      smoothVolume(vocals,.25,1500);
+      setStatus(which==='vocal1' ? 'memory swell ♡' : 'still here ♡');
+    }
+
+    function returnToPiano(){
+      currentMode='piano';
+      smoothVolume(vocals,0,1200);
+      smoothVolume(piano, muted?0:.24,1400);
+      setStatus('piano, softly ♡');
+      setTimeout(()=>{ if(vocals.volume < .01) vocals.pause(); },1400);
+    }
+
+    openBtn.addEventListener('click', async ()=>{
+      opening.classList.add('hidden');
+      main.classList.add('show');
+      musicPill.classList.add('show');
+      await startPiano();
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    muteBtn.addEventListener('click', ()=>{
+      muted=!muted;
+      document.body.classList.toggle('muted', muted);
+      muteBtn.textContent = muted ? '×' : '♫';
+      if(muted){
+        smoothVolume(piano,0,500);smoothVolume(vocals,0,500);setStatus('music paused');
+      }else{
+        if(currentMode==='piano'){ piano.play(); smoothVolume(piano,.24,700); setStatus('piano, softly ♡'); }
+        else { vocals.play(); smoothVolume(vocals,.25,700); smoothVolume(piano,.075,700); setStatus(currentMode==='vocal1'?'memory swell ♡':'still here ♡'); }
+      }
+    });
+
+    const revealObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+    },{threshold:.16});
+    document.querySelectorAll('.chapter,.quote-card').forEach(el=>revealObserver.observe(el));
+
+    const cueObserver = new IntersectionObserver((entries)=>{
+      const active = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(!active) return;
+      const el=active.target;
+      if(el.dataset.cue==='vocal1') enterVocalCue('vocal1');
+      else if(el.dataset.cue==='vocal2') enterVocalCue('vocal2');
+      else if(el.classList.contains('cue-piano')) returnToPiano();
+    },{threshold:[.3,.55,.75]});
+    document.querySelectorAll('.cue-piano,[data-cue]').forEach(el=>cueObserver.observe(el));
+
+    function spawnHeart(){
+      if(document.hidden || !main.classList.contains('show')) return;
+      const h=document.createElement('div');
+      h.className='floating-heart';
+      h.textContent=Math.random()>.45?'♡':'·';
+      h.style.left=(Math.random()*96)+'vw';
+      h.style.fontSize=(10+Math.random()*18)+'px';
+      h.style.animationDuration=(8+Math.random()*8)+'s';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),17000);
+    }
+    setInterval(spawnHeart,1500);
+  </script>
+</body>
+</html>
